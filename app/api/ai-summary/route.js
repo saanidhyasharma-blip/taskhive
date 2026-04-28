@@ -1,4 +1,4 @@
-import { generateSummary } from "@/lib/claude";
+import { generateSummary } from "@/lib/gemini";
 import { fetchTasks } from "@/lib/googleSheets";
 
 export async function GET() {

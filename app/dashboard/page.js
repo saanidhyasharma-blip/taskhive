@@ -11,6 +11,7 @@ export default function DashboardPage() {
   const [userName, setUserName] = useState("");
   const [tasks, setTasks] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState(null);
   const [aiSummary, setAiSummary] = useState("");
   const [isAiLoading, setIsAiLoading] = useState(false);
   const router = useRouter();
