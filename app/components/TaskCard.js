@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default function TaskCard({ task, onMarkDone }) {
   const [loading, setLoading] = useState(false);
-  const isDone = task.status === "Done";
+  const isDone = task.status === "Completed" || task.status === "Done";
 
   const handleMarkDone = async () => {
     if (isDone || loading) return;
@@ -20,6 +20,11 @@ export default function TaskCard({ task, onMarkDone }) {
     Daily: "bg-blue-50 text-blue-700 border-blue-200",
     Weekly: "bg-purple-50 text-purple-700 border-purple-200",
     "One-time": "bg-amber-50 text-amber-700 border-amber-200",
+    Technical: "bg-indigo-50 text-indigo-700 border-indigo-200",
+    Research: "bg-cyan-50 text-cyan-700 border-cyan-200",
+    Creative: "bg-pink-50 text-pink-700 border-pink-200",
+    Compliance: "bg-rose-50 text-rose-700 border-rose-200",
+    Meeting: "bg-emerald-50 text-emerald-700 border-emerald-200",
   };
 
   return (

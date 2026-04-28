@@ -14,23 +14,26 @@ export default function DashboardPage() {
   const [error, setError] = useState(null);
   const router = useRouter();
 
-  const fetchTasks = useCallback(async () => {
+  const fetchTasks = useCallback(async (user) => {
     try {
       const res = await fetch("/api/tasks");
       const data = await res.json();
 
-      // API returns flat array from Google Sheets
-      const allTasks = Array.isArray(data) ? data : data.tasks || [];
+      // Handle the "value" property from the sheet response
+      const allTasks = Array.isArray(data) ? data : data.value || [];
 
-      // Filter client-side: today's date + Pending status
-      const today = new Date().toISOString().split("T")[0];
+      // Filter: Match the sheet's status and assigned user
+      // Statuses in sheet: "In Progress", "Not Started", "Completed"
       const filtered = allTasks.filter(
-        (t) => t.plannedDate === today && t.status === "Pending"
+        (t) =>
+          t.assignedTo.toLowerCase() === user.toLowerCase() &&
+          (t.status === "In Progress" || t.status === "Not Started")
       );
 
       setTasks(filtered);
       setError(null);
-    } catch {
+    } catch (err) {
+      console.error("Fetch error:", err);
       setError("Failed to load tasks");
     }
   }, []);
@@ -43,7 +46,7 @@ export default function DashboardPage() {
       return;
     }
     setUserName(stored);
-    fetchTasks().then(() => setIsLoaded(true));
+    fetchTasks(stored).then(() => setIsLoaded(true));
   }, [router, fetchTasks]);
 
   const handleMarkDone = async (taskId) => {
@@ -55,16 +58,17 @@ export default function DashboardPage() {
     const data = await res.json();
 
     if (data.success) {
-      // Update UI instantly — remove the task from the pending list
       setTasks((prev) => prev.filter((t) => t.id !== taskId));
     }
   };
 
-  // Split tasks into recurring (Daily + Weekly) and one-time
+  // Split tasks - adjust categories to match your sheet or show all in one
   const recurringTasks = tasks.filter(
     (t) => t.taskType === "Daily" || t.taskType === "Weekly"
   );
-  const oneTimeTasks = tasks.filter((t) => t.taskType === "One-time");
+  const otherTasks = tasks.filter(
+    (t) => t.taskType !== "Daily" && t.taskType !== "Weekly"
+  );
 
   if (!isLoaded) {
     return (
@@ -120,19 +124,19 @@ export default function DashboardPage() {
         </Card>
       </section>
 
-      {/* One-time Tasks Section */}
+      {/* Project Tasks Section */}
       <section className="mb-6">
         <Card>
           <SectionHeader
-            title="One-time Tasks"
+            title="Project Tasks"
             icon="📌"
-            count={oneTimeTasks.length}
+            count={otherTasks.length}
           />
-          {oneTimeTasks.length === 0 ? (
-            <EmptyState message="No one-time tasks for today." />
+          {otherTasks.length === 0 ? (
+            <EmptyState message="No project tasks found." />
           ) : (
             <div className="space-y-3">
-              {oneTimeTasks.map((task) => (
+              {otherTasks.map((task) => (
                 <TaskCard
                   key={task.id}
                   task={task}
