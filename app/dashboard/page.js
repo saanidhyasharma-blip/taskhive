@@ -89,7 +89,10 @@ export default function DashboardPage() {
   if (!isLoaded) {
     return (
       <main className="flex-1 flex items-center justify-center">
-        <p className="text-muted text-sm">Loading tasks...</p>
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-muted text-sm font-medium">Loading tasks...</p>
+        </div>
       </main>
     );
   }
@@ -132,7 +135,7 @@ export default function DashboardPage() {
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-foreground mb-1">
-                  AI Productivity Insights
+                  Your Productivity Insight
                 </h3>
                 {isAiLoading ? (
                   <div className="flex items-center gap-2 mt-2">
@@ -166,7 +169,7 @@ export default function DashboardPage() {
             count={recurringTasks.length}
           />
           {recurringTasks.length === 0 ? (
-            <EmptyState message="No recurring tasks for today." />
+            <EmptyState message="No tasks for today 🎉" />
           ) : (
             <div className="space-y-3">
               {recurringTasks.map((task) => (
@@ -190,7 +193,7 @@ export default function DashboardPage() {
             count={otherTasks.length}
           />
           {otherTasks.length === 0 ? (
-            <EmptyState message="No project tasks found." />
+            <EmptyState message="No tasks for today 🎉" />
           ) : (
             <div className="space-y-3">
               {otherTasks.map((task) => (
