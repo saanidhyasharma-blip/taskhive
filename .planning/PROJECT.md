@@ -65,6 +65,10 @@ Users can quickly see and manage their tasks in a clean, responsive interface th
 | Hardcoded sample tasks | Dashboard looks populated immediately, better UX | — Pending |
 | No animation libraries | Keep initial bundle light per user preference | — Pending |
 | Tailwind CSS only (no component library) | Full control over design, minimal dependencies | — Pending |
+| Dashboard greeting as Client Component ('use client') | localStorage is browser-only; SSR will fail without this | — Pending |
+| useEffect/Suspense for hydration-safe name display | Avoids SSR/client mismatch where server sees null but client finds localStorage value | — Pending |
+| Tailwind v4 CSS variables for priority colors | Keeps JSX clean; define Low/Med/High colors in global CSS, reference via utilities | — Pending |
+| React Context for task state if complexity grows | Clean v1 pattern without heavy libs; avoids prop drilling between modal and list | — Pending |
 
 ## Evolution
 
