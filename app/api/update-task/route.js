@@ -1,24 +1,11 @@
 import { updateTask } from "@/lib/googleSheets";
 
-export async function POST(request) {
+export async function POST(req) {
   try {
-    const body = await request.json();
-    const { id } = body;
-
-    if (!id) {
-      return Response.json(
-        { success: false, error: "Task ID (row index) is required" },
-        { status: 400 }
-      );
-    }
-
-    const result = await updateTask(id);
-    return Response.json(result);
+    const { id } = await req.json();
+    await updateTask(id);
+    return Response.json({ success: true });
   } catch (error) {
-    console.error("Failed to update task:", error);
-    return Response.json(
-      { success: false, error: "Failed to update task" },
-      { status: 500 }
-    );
+    return Response.json({ error: "Update failed" }, { status: 500 });
   }
 }
