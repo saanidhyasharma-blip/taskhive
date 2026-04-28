@@ -11,19 +11,32 @@ export default function DashboardPage() {
   const [userName, setUserName] = useState("");
   const [tasks, setTasks] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState(null);
+  const [aiSummary, setAiSummary] = useState("");
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const router = useRouter();
+
+  const fetchAiSummary = async () => {
+    setIsAiLoading(true);
+    try {
+      const res = await fetch("/api/ai-summary");
+      const data = await res.json();
+      if (data.summary) {
+        setAiSummary(data.summary);
+      }
+    } catch (err) {
+      console.error("AI Summary fetch error:", err);
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
 
   const fetchTasks = useCallback(async (user) => {
     try {
       const res = await fetch("/api/tasks");
       const data = await res.json();
 
-      // Handle the "value" property from the sheet response
       const allTasks = Array.isArray(data) ? data : data.value || [];
 
-      // Filter: Match the sheet's status and assigned user
-      // Statuses in sheet: "In Progress", "Not Started", "Completed"
       const filtered = allTasks.filter(
         (t) =>
           t.assignedTo.toLowerCase() === user.toLowerCase() &&
@@ -46,7 +59,10 @@ export default function DashboardPage() {
       return;
     }
     setUserName(stored);
-    fetchTasks(stored).then(() => setIsLoaded(true));
+    fetchTasks(stored).then(() => {
+      setIsLoaded(true);
+      fetchAiSummary();
+    });
   }, [router, fetchTasks]);
 
   const handleMarkDone = async (taskId) => {
@@ -94,8 +110,49 @@ export default function DashboardPage() {
         </p>
       </header>
 
+      {/* AI Summary Section */}
+      {(isAiLoading || aiSummary) && (
+        <section className="mb-8">
+          <Card className="bg-gradient-to-br from-primary/5 to-transparent border-primary/10">
+            <div className="flex items-start gap-3">
+              <div className="mt-1 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <svg
+                  className="w-5 h-5 text-primary"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-foreground mb-1">
+                  AI Productivity Insights
+                </h3>
+                {isAiLoading ? (
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="w-2 h-2 rounded-full bg-primary/40 animate-bounce" />
+                    <div className="w-2 h-2 rounded-full bg-primary/40 animate-bounce [animation-delay:-.3s]" />
+                    <div className="w-2 h-2 rounded-full bg-primary/40 animate-bounce [animation-delay:-.5s]" />
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted leading-relaxed">
+                    &ldquo;{aiSummary}&rdquo;
+                  </p>
+                )}
+              </div>
+            </div>
+          </Card>
+        </section>
+      )}
+
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+        <div className="mb-6 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
           {error}
         </div>
       )}
