@@ -14,14 +14,21 @@ export default function DashboardPage() {
   const [error, setError] = useState(null);
   const router = useRouter();
 
-  const fetchTasks = useCallback(async (user) => {
+  const fetchTasks = useCallback(async () => {
     try {
-      const today = new Date().toISOString().split("T")[0];
-      const res = await fetch(
-        `/api/tasks?date=${today}&status=Pending`
-      );
+      const res = await fetch("/api/tasks");
       const data = await res.json();
-      setTasks(data.tasks || []);
+
+      // API returns flat array from Google Sheets
+      const allTasks = Array.isArray(data) ? data : data.tasks || [];
+
+      // Filter client-side: today's date + Pending status
+      const today = new Date().toISOString().split("T")[0];
+      const filtered = allTasks.filter(
+        (t) => t.plannedDate === today && t.status === "Pending"
+      );
+
+      setTasks(filtered);
       setError(null);
     } catch {
       setError("Failed to load tasks");
@@ -36,7 +43,7 @@ export default function DashboardPage() {
       return;
     }
     setUserName(stored);
-    fetchTasks(stored).then(() => setIsLoaded(true));
+    fetchTasks().then(() => setIsLoaded(true));
   }, [router, fetchTasks]);
 
   const handleMarkDone = async (taskId) => {
