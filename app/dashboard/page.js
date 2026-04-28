@@ -136,23 +136,11 @@ export default function DashboardPage() {
           <Card className="bg-gradient-to-br from-primary/5 to-transparent border-primary/10">
             <div className="flex items-start gap-3">
               <div className="mt-1 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                <svg
-                  className="w-5 h-5 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
+                <span className="text-lg">💡</span>
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-foreground mb-1">
-                  Your Productivity Insight
+                  Productivity Insight
                 </h3>
                 {isAiLoading ? (
                   <div className="flex items-center gap-2 mt-2">
@@ -178,51 +166,47 @@ export default function DashboardPage() {
       )}
 
       {/* Recurring Tasks Section */}
-      <section className="mb-6">
-        <Card>
-          <SectionHeader
-            title="Recurring Tasks"
-            icon="🔁"
-            count={recurringTasks.length}
-          />
-          {recurringTasks.length === 0 ? (
-            <EmptyState message="No tasks for today 🎉" />
-          ) : (
-            <div className="space-y-3">
-              {recurringTasks.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onMarkDone={handleMarkDone}
-                />
-              ))}
-            </div>
-          )}
-        </Card>
+      <section className="mb-8">
+        <SectionHeader
+          title="Recurring Tasks"
+          icon="🔁"
+          count={recurringTasks.length}
+        />
+        {recurringTasks.length === 0 ? (
+          <EmptyState message="🎉 No tasks for today!" />
+        ) : (
+          <div className="space-y-3">
+            {recurringTasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                onMarkDone={handleMarkDone}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
-      {/* Project Tasks Section */}
-      <section className="mb-6">
-        <Card>
-          <SectionHeader
-            title="Project Tasks"
-            icon="📌"
-            count={otherTasks.length}
-          />
-          {otherTasks.length === 0 ? (
-            <EmptyState message="No tasks for today 🎉" />
-          ) : (
-            <div className="space-y-3">
-              {otherTasks.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onMarkDone={handleMarkDone}
-                />
-              ))}
-            </div>
-          )}
-        </Card>
+      {/* One-time Tasks Section */}
+      <section className="mb-8">
+        <SectionHeader
+          title="One-time Tasks"
+          icon="📌"
+          count={otherTasks.length}
+        />
+        {otherTasks.length === 0 ? (
+          <EmptyState message="🎉 No tasks for today!" />
+        ) : (
+          <div className="space-y-3">
+            {otherTasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                onMarkDone={handleMarkDone}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Footer */}

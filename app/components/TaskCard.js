@@ -58,7 +58,7 @@ export default function TaskCard({ task, onMarkDone }) {
         </p>
       </div>
 
-      {!isDone && (
+      {!isDone ? (
         <button
           onClick={handleMarkDone}
           disabled={loading}
@@ -66,6 +66,10 @@ export default function TaskCard({ task, onMarkDone }) {
         >
           {loading ? "..." : "Mark Done"}
         </button>
+      ) : (
+        <div className="shrink-0 px-3 py-1.5 text-xs font-medium rounded-md bg-success/5 text-success/70 border border-success/10">
+          Done ✅
+        </div>
       )}
     </div>
   );
