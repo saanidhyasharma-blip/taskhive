@@ -18,7 +18,7 @@ export default function DashboardPage() {
     try {
       const today = new Date().toISOString().split("T")[0];
       const res = await fetch(
-        `/api/tasks?assignedTo=${encodeURIComponent(user)}&date=${today}&status=Pending`
+        `/api/tasks?date=${today}&status=Pending`
       );
       const data = await res.json();
       setTasks(data.tasks || []);
