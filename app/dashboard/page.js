@@ -117,16 +117,15 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="text-right">
-          <p className="text-[10px] font-bold text-muted uppercase tracking-wider mb-1">
-            Weekly Score
-          </p>
+        <div className="text-right flex flex-col items-end">
           <div
-            className={`text-2xl font-black ${
-              totalScore >= 0 ? "text-success" : "text-destructive"
+            className={`px-3 py-1.5 rounded-lg border font-bold text-sm ${
+              totalScore >= 0
+                ? "bg-success/5 text-success border-success/20"
+                : "bg-destructive/5 text-destructive border-destructive/20"
             }`}
           >
-            {totalScore > 0 ? `+${totalScore}` : totalScore}
+            Weekly Score: {totalScore > 0 ? `+${totalScore}` : totalScore}
           </div>
         </div>
       </header>
