@@ -87,6 +87,8 @@ export default function DashboardPage() {
     (t) => t.taskType !== "Daily" && t.taskType !== "Weekly"
   );
 
+  const totalScore = tasks.reduce((acc, t) => acc + (t.score || 0), 0);
+
   if (!isLoaded) {
     return (
       <main className="flex-1 flex items-center justify-center">
@@ -101,17 +103,32 @@ export default function DashboardPage() {
   return (
     <main className="flex-1 flex flex-col max-w-2xl mx-auto w-full px-4 py-6">
       {/* Header */}
-      <header className="mb-8">
-        <p className="text-sm text-muted mb-1">Welcome back,</p>
-        <h1 className="text-2xl font-bold text-foreground">{userName}</h1>
-        <p className="text-xs text-muted mt-1">
-          {new Date().toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </p>
+      <header className="mb-8 flex items-start justify-between">
+        <div>
+          <p className="text-sm text-muted mb-1">Welcome back,</p>
+          <h1 className="text-2xl font-bold text-foreground">{userName}</h1>
+          <p className="text-xs text-muted mt-1">
+            {new Date().toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </p>
+        </div>
+
+        <div className="text-right">
+          <p className="text-[10px] font-bold text-muted uppercase tracking-wider mb-1">
+            Weekly Score
+          </p>
+          <div
+            className={`text-2xl font-black ${
+              totalScore >= 0 ? "text-success" : "text-destructive"
+            }`}
+          >
+            {totalScore > 0 ? `+${totalScore}` : totalScore}
+          </div>
+        </div>
       </header>
 
       {/* AI Summary Section */}
